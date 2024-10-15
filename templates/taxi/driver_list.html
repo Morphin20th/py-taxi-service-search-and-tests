@@ -34,6 +34,6 @@
 
     </table>
   {% else %}
-    <p>There are no drivers in the service.</p>
+    <p>There are no drivers in the service. You can <a href="{% url 'taxi:driver-create' %}">add</a> one</p>
   {% endif %}
 {% endblock %}

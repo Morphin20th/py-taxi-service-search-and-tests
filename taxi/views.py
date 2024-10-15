@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -93,7 +94,7 @@ class CarListView(LoginRequiredMixin, generic.ListView):
         )
         return context
 
-    def get_queryset(self):
+        def get_queryset(self):
         queryset = Car.objects.all()
         form = CarSearchForm(self.request.GET)
 
@@ -101,6 +102,8 @@ class CarListView(LoginRequiredMixin, generic.ListView):
             model = form.cleaned_data.get("model")
             if model:
                 queryset = queryset.filter(model__icontains=model)
+        else:
+            raise ValidationError("The form is invalid.")
 
         return queryset
 
@@ -146,6 +149,8 @@ class DriverListView(LoginRequiredMixin, generic.ListView):
             username = form.cleaned_data.get("username")
             if username:
                 queryset = queryset.filter(username__icontains=username)
+        else:
+            raise ValidationError("The form is invalid.")
 
         return queryset
 

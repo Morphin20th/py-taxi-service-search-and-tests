@@ -11,53 +11,29 @@ class FormsTests(TestCase):
         cls.first_name = "James"
         cls.last_name = "Bond"
 
-    def test_valid_license_number(self):
+    def create_form(self, license_number: str):
         form_data = {
             "username": self.username,
             "password1": self.password,
             "password2": self.password,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "license_number": "AAA12345",
+            "license_number": license_number,
         }
-        form = DriverCreationForm(data=form_data)
+        return DriverCreationForm(form_data)
+
+    def test_valid_license_number(self):
+        form = self.create_form("AAA12345")
         self.assertTrue(form.is_valid())
 
     def test_invalid_license_number_too_short(self):
-        form_data = {
-            "username": self.username,
-            "password1": self.password,
-            "password2": self.password,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "license_number": "AA12345",
-        }
-        form = DriverCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        form = self.create_form("AA12345")
         self.assertFalse(form.is_valid())
 
     def test_invalid_license_number_format_uppercase(self):
-        form_data = {
-            "username": self.username,
-            "password1": self.password,
-            "password2": self.password,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "license_number": "abc12345",
-        }
-        form = DriverCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        form = self.create_form("abc12345")
         self.assertFalse(form.is_valid())
 
     def test_invalid_license_number_format_digits(self):
-        form_data = {
-            "username": self.username,
-            "password1": self.password,
-            "password2": self.password,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "license_number": "AAAABCDD",
-        }
-        form = DriverCreationForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        form = self.create_form("AAAABCDD")
         self.assertFalse(form.is_valid())
